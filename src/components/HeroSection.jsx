@@ -1,192 +1,309 @@
-import { useEffect, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 import { PhoneIcon, ArrowDownOnSquareIcon } from "@heroicons/react/24/solid";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLinkedin, faGithub, faInstagram, faReact, faCss3, faJs, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import { faLinkedin, faGithub, faInstagram, faReact, faCss3, faJs, faWhatsapp,} from "@fortawesome/free-brands-svg-icons";
 
-function useTypewriter(text, speed = 20) {
+// ─── Constante de offset ────────────────────────
+const HEADER_OFFSET = 80;
+
+function scrollToSection(href) {
+  const id = href.replace("#", "");
+  const el = document.getElementById(id);
+  if (!el) return;
+  window.scrollTo({
+    top: el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET,
+    behavior: "smooth",
+  });
+}
+
+// ─── Typewriter otimizado com useRef ───────
+function useTypewriter(text, speed = 40) {
   const [displayedText, setDisplayedText] = useState("");
-  const [isComplete, setIsComplete] = useState(false);
+  const indexRef = useRef(0);
 
   useEffect(() => {
-    if (displayedText.length < text.length) {
-      const timeout = setTimeout(() => {
-        setDisplayedText(text.slice(0, displayedText.length + 1));
-      }, speed);
+    indexRef.current = 0;
+    setDisplayedText("");
 
-      return () => clearTimeout(timeout);
-    } else {
-      setIsComplete(true);
-    }
-  }, [displayedText, text, speed]);
+    const tick = () => {
+      if (indexRef.current < text.length) {
+        indexRef.current += 1;
+        setDisplayedText(text.slice(0, indexRef.current));
+        timeoutId = setTimeout(tick, speed);
+      }
+    };
 
+    let timeoutId = setTimeout(tick, speed);
+    return () => clearTimeout(timeoutId);
+  }, [text, speed]);
+
+  const isComplete = displayedText.length === text.length;
   return { displayedText, isComplete };
 }
 
+// ─── Ícone flutuante ──────────────────────────────────────────────────────────
 function FloatingIcon({ icon, position, delay }) {
   return (
     <div
-      className={`absolute w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-full bg-slate-800/60 border border-lime-400/30 backdrop-blur-sm hover:bg-slate-700/80 hover:border-lime-400/60 transition-all duration-300 ${position}`}
-      style={{
-        animation: `float 6s ease-in-out infinite`,
-        animationDelay: `${delay}s`
-      }}
+      className={`absolute w-14 h-14 flex items-center justify-center rounded-full
+        bg-slate-800/70 border border-lime-400/30 backdrop-blur-sm shadow-lg shadow-lime-500/20
+        transition-all duration-300 ${position}`}
+      style={{ animation: `heroFloat 6s ease-in-out ${delay}s infinite` }}
     >
       {icon}
     </div>
   );
 }
 
-function ProfileVisual() {
+// ─── Imagem de perfil com fallback correto ───────────────────────────────────
+function ProfileImage() {
+  const [status, setStatus] = useState("loading"); // "loading" | "loaded" | "error"
+
   return (
-    <div className="relative w-full flex justify-center items-center mt-12 md:mt-0 md:h-96">
-      <style>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-20px); }
-        }
+    <div className="relative w-64 h-64 md:w-72 md:h-72">
+      {/* Glow de fundo */}
+      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-lime-500/30 to-emerald-500/20 blur-2xl scale-110" />
 
-        @keyframes fadeInScale {
-          from {
-            opacity: 0;
-            transform: scale(0.9);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
+      {/* Anel interno fixo */}
+      <div className="absolute inset-1 rounded-full border border-lime-500/20 z-20 pointer-events-none" />
 
-        @keyframes slideInRight {
-          from {
-            opacity: 0;
-            transform: translateX(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateX(0);
-          }
-        }
-      `}</style>
-
-      <div className="absolute w-60 h-60 md:w-80 md:h-80 bg-gradient-to-br from-lime-500/20 via-amber-400/20 to-lime-500/20 rounded-full blur-3xl animate-pulse"></div>
-
-      <div className="hidden lg:block">
-        <FloatingIcon icon={<FontAwesomeIcon icon={faReact} className="w-6 h-6 md:w-8 md:h-8 text-lime-400" />}position="top-0 left-8" delay="0"/>
-        <FloatingIcon icon={<FontAwesomeIcon icon={faJs} className="w-6 h-6 md:w-8 md:h-8 text-lime-400" />}
-          position="top-8 right-0"
-          delay="0.5"/>
-        <FloatingIcon icon={<FontAwesomeIcon icon={faCss3} className="w-6 h-6 md:w-8 md:h-8 text-lime-400" />} position="bottom-8 left-4" delay="1"/>
-      </div>
-
-      <div className="w-72 h-72 md:w-72 md:h-72 relative z-10 rounded-full overflow-hidden shadow-2xl" style={{ animation: "fadeInScale 0.8s ease-out" }}>
-        <div className="absolute inset-0 rounded-full border-2 border-lime-500/40 pointer-events-none z-20"></div>
-        
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-700 to-slate-900"></div>
-        
-        <img src="foto de perfil.jpg" alt="Juliana Jacinto" className="w-full h-full object-cover" loading="lazy"/>
-        
-        <div className="absolute inset-0 flex items-center justify-center text-slate-400 font-mono text-xs md:text-sm">
-          <div className="text-center">
-            <p className="text-lime-400 mb-2">📸</p>
-            <p>foto de perfil</p>
+      {/* Container da imagem */}
+      <div className="relative w-full h-full rounded-full overflow-hidden z-10 bg-slate-800">
+        {/* Skeleton enquanto carrega */}
+        {status === "loading" && (
+          <div className="absolute inset-0 flex items-center justify-center bg-slate-800 animate-pulse">
+            <div className="w-16 h-16 rounded-full bg-slate-700" />
           </div>
-        </div>
+        )}
+
+        {/* Fallback — só aparece se a imagem falhar */}
+        {status === "error" && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900 gap-2">
+            <span className="text-xs text-slate-500 font-mono">foto de perfil</span>
+          </div>
+        )}
+
+        <img
+          src="src/assets/images/foto de perfil.jpeg"
+          alt="Juliana Jacinto"
+          loading="lazy"
+          onLoad={() => setStatus("loaded")}
+          onError={() => setStatus("error")}
+          className={`w-full h-full object-cover transition-opacity duration-500 ${
+            status === "loaded" ? "opacity-100" : "opacity-0"
+          }`}
+        />
       </div>
     </div>
   );
 }
 
+// ─── Elemento visual lateral ─────────────────────────────────────────────────
+function ProfileVisual() {
+  return (
+    <div className="relative w-full flex justify-center items-center mt-12 md:mt-0 md:h-96">
+      {/* Ícones flutuantes — só desktop */}
+      <div className="hidden lg:block">
+        <FloatingIcon
+          icon={<FontAwesomeIcon icon={faReact} className="w-7 h-7 text-lime-400" />}
+          position="top-4 left-14"
+          delay={0}
+        />
+        <FloatingIcon
+          icon={<FontAwesomeIcon icon={faJs} className="w-7 h-7 text-lime-400" />}
+          position="top-24 right-12"
+          delay={0.5}
+        />
+        <FloatingIcon
+          icon={<FontAwesomeIcon icon={faCss3} className="w-7 h-7 text-lime-400" />}
+          position="bottom-0 left-12"
+          delay={1}
+        />
+      </div>
+
+      <ProfileImage />
+    </div>
+  );
+}
+
+// ─── Badge de status ──────────────────────────────────────────────────────────
+function AvailableBadge() {
+  return (
+    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-lime-500/10 border border-lime-500/30 text-lime-400 text-sm font-medium mb-4">
+      <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse" />
+      Disponível para projetos
+    </div>
+  );
+}
+
+// ─── Hero ─────────────────────────────────────────────────────────────────────
 export default function HeroSection() {
-  const fullText = "Desenvolvedora Web | Front-End | React & Tailwind";
-  const { displayedText, isComplete } = useTypewriter(fullText, 20);
+  const fullText = "Desenvolvedora Web · Front-End · React & Tailwind";
+  const { displayedText, isComplete } = useTypewriter(fullText, 35);
 
   return (
     <>
-      <section className="relative min-h-screen md:min-h-[720px] flex items-center justify-center bg-gradient-to-b from-slate-950 via-slate-900 to-lime-800 px-6 sm:px-6 py-16 md:py-16 overflow-hidden pt-20 md:pt-32" id="home">
-        
-        <div className="absolute inset-0 z-0 pointer-events-none opacity-10 md:opacity-15">
+      {/* Keyframes globais da seção */}
+      <style>{`
+        @keyframes heroFloat {
+          0%, 100% { transform: translateY(0); }
+          50%       { transform: translateY(-16px); }
+        }
+        @keyframes heroSpin {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
+        }
+        @keyframes heroFadeUp {
+          from { opacity: 0; transform: translateY(24px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
+      {/* ─── id corrigido: "inicio" ────────────────────────────────────────── */}
+      <section
+        id="inicio"
+        className="relative min-h-[720px] flex items-center justify-center bg-gradient-to-b from-slate-950 via-slate-900 to-lime-900 px-6 py-16 overflow-hidden pt-24 md:pt-32"
+      >
+        {/* Padrão de pontos */}
+        <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.07]">
           <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
-                <circle cx="10" cy="10" r="1.5" fill="currentColor"/>
+              <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
+                <circle cx="12" cy="12" r="1.5" fill="currentColor" className="text-lime-500" />
               </pattern>
             </defs>
             <rect width="100%" height="100%" fill="url(#dots)" />
           </svg>
         </div>
-        
-        <div className="relative z-10 max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center mt-24 md:mt-24">
-          
-          {/* Text Content */}
-          <div className="space-y-4 md:space-y-6 animate-fadeIn">
-            <div>
-              <h1 className="text-5xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
-                <span className="bg-gradient-to-r from-lime-400 to-emerald-400 bg-clip-text text-transparent block">
+
+        {/* Grid principal */}
+        <div className="relative z-10 max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+
+          {/* ── Coluna de texto ───────────────────────────────────────────── */}
+          <div className="space-y-5 md:space-y-6">
+
+            {/* Badge */}
+            <div style={{ animation: "heroFadeUp 0.6s ease-out 0.1s both" }}>
+              <AvailableBadge />
+            </div>
+
+            {/* Nome */}
+            <div style={{ animation: "heroFadeUp 0.6s ease-out 0.2s both" }}>
+              <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">
+                <span className="bg-gradient-to-r from-lime-400 to-emerald-400 bg-clip-text text-transparent">
                   Juliana Jacinto
                 </span>
               </h1>
             </div>
 
-            {/* Animated subtitle */}
-            <div className="min-h-[2rem] md:min-h-[2.5rem]">
-              <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl text-slate-200 font-semibold line-clamp-2">
+            {/* Typewriter */}
+            <div
+              className="min-h-[2rem] md:min-h-[2.5rem]"
+              style={{ animation: "heroFadeUp 0.6s ease-out 0.3s both" }}
+            >
+              <h2 className="text-base sm:text-lg md:text-xl text-slate-200 font-semibold">
                 {displayedText}
-                <span className={`ml-1 ${isComplete ? "animate-pulse" : "animate-bounce"} text-lime-400 inline-block`}>
+                <span
+                  className={`ml-0.5 text-lime-400 ${
+                    isComplete ? "animate-pulse" : ""
+                  }`}
+                >
                   |
                 </span>
               </h2>
             </div>
 
-            {/* Description */}
-            <p className="text-md sm:text-lg md:text-lg text-slate-400 leading-relaxed">
-              Combinando criatividade e lógica para desenvolver interfaces modernas, funcionais e alinhadas com objetivos reais de negócio.
+            {/* Descrição */}
+            <p
+              className="text-slate-400 leading-relaxed max-w-lg"
+              style={{ animation: "heroFadeUp 0.6s ease-out 0.4s both" }}
+            >
+              Combinando criatividade e lógica para desenvolver interfaces modernas,
+              funcionais e alinhadas com objetivos reais de negócio.
             </p>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-2 md:pt-4">
-              <a href="JulianaJacinto_currículo2026.pdf" download target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-8 py-3 bg-lime-500 text-slate-900 hover:bg-lime-400 hover:shadow-lime-400/20 font-semibold rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl" aria-label="Download currículo em PDF">
+            {/* CTAs */}
+            <div
+              className="flex flex-col sm:flex-row gap-3 pt-2"
+              style={{ animation: "heroFadeUp 0.6s ease-out 0.5s both" }}
+            >
+              <a
+                href="JulianaJacinto_currículo2026.pdf"
+                download
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-8 py-3
+                  bg-lime-500 text-slate-900 hover:bg-lime-400
+                  font-semibold rounded-full shadow-lg shadow-lime-600/20
+                  hover:shadow-lime-600/30 hover:scale-105
+                  transition-all duration-300"
+              >
                 Baixar Currículo
-                <ArrowDownOnSquareIcon  className="h-4 w-4" />
+                <ArrowDownOnSquareIcon className="h-4 w-4" />
               </a>
-              <a href="#contato" className="inline-flex items-center gap-2 px-10 py-3 bg-slate-900 border hover:bg-lime-500/10 hover:border-lime-400 border-lime-500 text-lime-400 font-semibold rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+
+              <button
+                onClick={() => scrollToSection("#contato")}
+                className="inline-flex items-center justify-center gap-2 px-8 py-3
+                  bg-slate-900 border border-lime-500 text-lime-400
+                  hover:bg-slate-900/70 hover:border-lime-400
+                  font-semibold rounded-full shadow-lg
+                  hover:scale-105 transition-all duration-300"
+              >
                 Entre em contato
                 <PhoneIcon className="h-4 w-4" />
-              </a>
+              </button>
             </div>
 
-            {/* Social Links */}
-            <div className="pt-4 md:pt-6 border-t border-lime-700">
-              <div className="flex gap-4 md:gap-6">
-                <a href="https://github.com/julianajacinto" target="_blank" rel="noopener noreferrer" className="text-slate-200 hover:text-lime-300 hover:scale-125 transition-all duration-300 p-2 hover:bg-slate-800/30 rounded-lg">
-                  <FontAwesomeIcon icon={faGithub} className="w-5 h-5 md:w-6 md:h-6" />
-                </a>
-                <a href="https://www.linkedin.com/in/juliana-jacinto/" target="_blank" rel="noopener noreferrer" className="text-slate-200 hover:text-lime-300 hover:scale-125 transition-all duration-300 p-2 hover:bg-slate-800/30 rounded-lg">
-                  <FontAwesomeIcon icon={faLinkedin} className="w-5 h-5 md:w-6 md:h-6" />
-                </a>
-                <a href="https://wa.me/5511966403523" target="_blank" rel="noopener noreferrer" className="text-slate-200 hover:text-lime-300 hover:scale-125 transition-all duration-300 p-2 hover:bg-slate-800/30 rounded-lg">
-                  <FontAwesomeIcon icon={faWhatsapp} className="w-5 h-5 md:w-6 md:h-6" />
-                </a>
-                <a href="https://www.instagram.com/jukka.arts/" target="_blank" rel="noopener noreferrer" className="text-slate-200 hover:text-lime-300 hover:scale-125 transition-all duration-300 p-2 hover:bg-slate-800/30 rounded-lg">
-                  <FontAwesomeIcon icon={faInstagram} className="w-5 h-5 md:w-6 md:h-6" />
-                </a>
+            {/* Redes sociais */}
+            <div
+              className="pt-4 border-t border-lime-800"
+              style={{ animation: "heroFadeUp 0.6s ease-out 0.6s both" }}
+            >
+              <div className="flex gap-2">
+                {[
+                  { icon: faGithub, href: "https://github.com/julianajacinto", label: "GitHub" },
+                  { icon: faLinkedin, href: "https://www.linkedin.com/in/juliana-jacinto/", label: "LinkedIn" },
+                  { icon: faWhatsapp, href: "https://wa.me/5511966403523", label: "WhatsApp" },
+                  { icon: faInstagram, href: "https://www.instagram.com/jukka.arts/", label: "Instagram" },
+                ].map(({ icon, href, label }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className="p-2.5 rounded-xl text-slate-400
+                      hover:text-lime-400 hover:bg-slate-800/60 hover:scale-110
+                      transition-all duration-300"
+                  >
+                    <FontAwesomeIcon icon={icon} className="w-6 h-6" />
+                  </a>
+                ))}
               </div>
             </div>
           </div>
 
-          {/* Visual Element */}
-          <ProfileVisual />
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-6 md:bottom-6 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="flex flex-col items-center gap-2">
-            <ChevronDownIcon className="w-8 h-8 text-lime-400 mx-auto" />
+          {/* ── Coluna visual ─────────────────────────────────────────────── */}
+          <div style={{ animation: "heroFadeUp 0.8s ease-out 0.3s both" }}>
+            <ProfileVisual />
           </div>
         </div>
+
+        {/* Indicador de scroll */}
+        <button
+          onClick={() => scrollToSection("#sobre")}
+          aria-label="Ir para a próxima seção"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1
+            text-lime-400/60 hover:text-lime-400 transition-colors duration-300 animate-bounce"
+        >
+          <ChevronDownIcon className="w-7 h-7" />
+        </button>
       </section>
 
-      <section className="p-2 bg-lime-500"></section>
+      {/* Divisor */}
+      <section className="h-2 bg-lime-500" />
     </>
   );
 }

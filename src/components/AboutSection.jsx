@@ -1,100 +1,245 @@
 import { useMemo } from "react";
 import { BoltIcon, PuzzlePieceIcon } from "@heroicons/react/24/solid";
 
+// ─── Scroll suave com offset ────────────────────────
+const HEADER_OFFSET = 80;
+function scrollToSection(href) {
+  const el = document.getElementById(href.replace("#", ""));
+  if (!el) return;
+  window.scrollTo({
+    top: el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET,
+    behavior: "smooth",
+  });
+}
+
+// ─── Skills ──────────────────────────────────────────────────────────────────
 const SKILLS = [
-  "HTML",
-  "CSS",
-  "JavaScript",
-  "React",
-  "UX/UI",
-  "WordPress",
+  "HTML", "CSS", "JavaScript", "React", "Node.js",
+  "UX/UI", "WordPress", "Python", "IoT",
 ];
 
 function SkillTag({ children }) {
   return (
-    <span className="px-4 py-2 bg-lime-700/50 backdrop-blur-sm border border-lime-400/30 text-lime-100 rounded-full text-sm font-medium">
+    <span
+      className="px-4 py-1.5 bg-slate-800/80 border border-lime-400/20
+        text-lime-100 rounded-full text-sm font-medium
+        hover:bg-lime-500/10 hover:border-lime-400/50 hover:text-lime-300
+        transition-all duration-200 cursor-default select-none"
+    >
       {children}
     </span>
   );
 }
 
+// ─── Fundo decorativo: círculos + hexágonos ──────────────────────
+function DecorativeBackground() {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+
+      {/* Círculo grande — canto superior direito */}
+      <div className="absolute -top-32 -right-32 w-[520px] h-[520px] rounded-full
+        border border-lime-500/10 bg-gradient-to-br from-lime-500/5 to-transparent" />
+      <div className="absolute -top-16 -right-16 w-[360px] h-[360px] rounded-full
+        border border-lime-400/8" />
+
+      {/* Círculo médio — canto inferior esquerdo */}
+      <div className="absolute -bottom-40 -left-24 w-[400px] h-[400px] rounded-full
+        border border-lime-500/10 bg-gradient-to-tr from-lime-500/5 to-transparent" />
+
+      {/* Hexágono SVG — centro-direita */}
+      <svg className="absolute right-8 top-1/3 w-40 h-40 opacity-[0.06]" viewBox="0 0 100 100">
+        <polygon points="50,5 95,27.5 95,72.5 50,95 5,72.5 5,27.5"
+          fill="none" stroke="#a3e635" strokeWidth="1.5" />
+      </svg>
+
+      {/* Hexágono menor — esquerda */}
+      <svg className="absolute left-6 top-1/4 w-20 h-20 opacity-[0.06]" viewBox="0 0 100 100">
+        <polygon points="50,5 95,27.5 95,72.5 50,95 5,72.5 5,27.5"
+          fill="none" stroke="#a3e635" strokeWidth="2" />
+      </svg>
+
+      {/* Grid de pontos sutil */}
+      <svg className="absolute inset-0 w-full h-full opacity-[0.04]">
+        <defs>
+          <pattern id="about-dots" width="28" height="28" patternUnits="userSpaceOnUse">
+            <circle cx="14" cy="14" r="1" fill="white" />
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#about-dots)" />
+      </svg>
+
+      {/* Glow de acento lime */}
+      <div className="absolute top-0 right-1/4 w-72 h-72
+        bg-lime-500/5 rounded-full blur-3xl" />
+    </div>
+  );
+}
+
+// ─── Imagem com placeholder e estado de erro ─────────────────────────────────
+function ProfileImageCard() {
+  return (
+    <div className="relative group h-full min-h-[360px]">
+      {/* Borda animada no hover */}
+      <div className="absolute -inset-px rounded-2xl bg-gradient-to-br from-lime-400/0 via-lime-400/0 to-lime-400/0
+        group-hover:from-lime-500/30 group-hover:via-lime-400/10 group-hover:to-emerald-500/20
+        transition-all duration-500 blur-sm" aria-hidden="true" />
+
+      {/* Card */}
+      <div className="relative h-full rounded-2xl overflow-hidden
+        border border-lime-400/15 group-hover:border-lime-400/40
+        bg-slate-900/60 backdrop-blur-sm
+        transition-all duration-300 shadow-xl shadow-black/30">
+
+        {/* Placeholder elegante enquanto a imagem não está disponível */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-gradient-to-br from-slate-800 to-slate-900">
+          <span className="text-xs text-slate-500 font-mono tracking-widest uppercase">
+            foto em breve
+          </span>
+        </div>
+
+        {/* Imagem real — quando disponível sobe sobre o placeholder */}
+        <img
+          src="src/assets/images/placeholder.jpg"
+          alt="Foto de Juliana Jacinto"
+          className="relative z-10 w-full h-full object-cover opacity-0 transition-opacity duration-500"
+          onLoad={(e) => e.currentTarget.classList.replace("opacity-0", "opacity-100")}
+        />
+
+        {/* Shine no hover */}
+        <div className="absolute inset-0 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-500
+          bg-gradient-to-tr from-transparent via-white/3 to-transparent pointer-events-none" />
+      </div>
+
+      {/* Badge flutuante */}
+      <div className="absolute -bottom-4 -right-4 z-30
+        flex items-center gap-2 px-4 py-2 rounded-xl
+        bg-slate-900 border border-lime-500/30
+        shadow-lg shadow-black/40 text-sm font-semibold text-lime-400">
+        <span className="w-2 h-2 rounded-full bg-lime-400 animate-pulse" />
+        Disponível p/ projetos
+      </div>
+    </div>
+  );
+}
+
+// ─── Seção principal ──────────────────────────────────────────────────────────
 export default function AboutSection() {
   const skills = useMemo(() => SKILLS, []);
 
   return (
-    <section className="bg-gradient-to-br from-slate-950 via-slate-900 to-lime-800 py-16 sm:py-20 overflow-hidden" id="sobre" aria-labelledby="sobre-title">
-      <div className="max-w-6xl mx-auto space-y-14 relative z-10">
-        
-        {/* About Me */}
-        <div className="space-y-2 mb-4">
-          <div className="inline-flex items-center gap-3">
-            <div className="w-1 h-20 bg-lime-400 rounded-full" aria-hidden="true" />
-            <h2 className="text-4xl text-slate-200 md:text-5xl font-bold">
+    <section
+      id="sobre"
+      aria-labelledby="sobre-title"
+      className="relative bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 py-16 sm:py-18 overflow-hidden"
+    >
+      <DecorativeBackground />
+
+      <div className="relative z-10 max-w-6xl mx-auto px-6">
+
+        {/* ── Cabeçalho da seção ──────────────────────────────────────────── */}
+        <div className="mb-16">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-1 h-10 bg-gradient-to-b from-lime-400 to-lime-600 rounded-full" aria-hidden="true" />
+            <h2
+              id="sobre-title"
+              className="text-4xl md:text-5xl font-bold text-slate-100 tracking-tight"
+            >
               Sobre <span className="text-lime-400">Mim</span>
             </h2>
           </div>
-          <p className="text-lg text-slate-400 max-w-2xl">
+          <p className="text-slate-400 text-lg ml-4 pl-3 border-l border-slate-800">
             Conheça um pouco mais sobre mim e da minha trajetória profissional!
           </p>
         </div>
 
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-stretch">
+        {/* ── Grid principal ───────────────────────────────────────────────── */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
 
-          {/* Image side */}
-          <div className="relative group h-full">
-            <div className="absolute -inset-1 bg-lime-500/20 rounded-2xl blur opacity-70 group-hover:opacity-100 transition-all duration-300 group-hover:blur-xl" aria-hidden="true"/>
-            <div className="relative h-full rounded-2xl overflow-hidden border-4 border-lime-400/20 group-hover:border-lime-400/50 transition-all duration-300">
-              <img
-                src="placeholder.jpg"
-                alt="Foto de perfil de Juliana Jacinto"
-                className="w-full h-full object-cover"
-              />
+          {/* Coluna: imagem */}
+          <ProfileImageCard />
+
+          {/* Coluna: conteúdo */}
+          <div className="flex flex-col justify-center space-y-6">
+
+            {/* Texto biográfico */}
+            <div className="space-y-4 text-slate-300 leading-relaxed">
+              <p>
+                Olá! Sou a{" "}
+                <strong className="text-lime-300 font-semibold">Juliana Jacinto</strong> —
+                ou <em className="text-lime-400">Jukka</em> para os íntimos — uma
+                desenvolvedora Front-End focada em criar experiências digitais
+                envolventes, funcionais e bem estruturadas.
+              </p>
+              <p>
+                Atualmente curso{" "}
+                <strong className="text-lime-300 font-semibold">
+                  Análise e Desenvolvimento de Sistemas
+                </strong>{" "}
+                na FATEC de Cruzeiro-SP e atuo como{" "}
+                <strong className="text-lime-300 font-semibold">bolsista no INPE</strong>{" "}
+                (Instituto Nacional de Pesquisas Espaciais), integrando o Projeto
+                Educação em parceria com universidades e instituições.
+              </p>
+              <p>
+                Minha jornada com programação começou há mais de 8 anos, explorando
+                desde <strong className="text-lime-300 font-semibold">Python</strong> e
+                projetos com{" "}
+                <strong className="text-lime-300 font-semibold">IoT</strong> (Arduino e
+                ESP32) até o desenvolvimento web moderno. Hoje concentro meu trabalho em{" "}
+                <strong className="text-lime-300 font-semibold">
+                  React e Next.js
+                </strong>
+                , com foco em interfaces bem estruturadas e performáticas.
+              </p>
+              <p>
+                Valorizo{" "}
+                <strong className="text-lime-300 font-semibold">código limpo</strong>,
+                projetos organizados e atenção em{" "}
+                <strong className="text-lime-300 font-semibold">UX/UI</strong> — unindo
+                lógica, estética e eficiência para criar soluções que realmente fazem
+                sentido.
+              </p>
             </div>
-          </div>
 
-            {/* Content side */}
-            <div className="flex flex-col justify-center space-y-5">
-              <div className="space-y-2 text-slate-300 leading-relaxed">
-                <p>
-                  Olá! Sou a <strong className="text-lime-200 font-semibold">Juliana Jacinto</strong> —
-                  ou <em className="text-lime-300">Jukka</em> para os íntimos — uma desenvolvedora Front-End 
-                  focada em criar experiências digitais envolventes, funcionais e bem estruturadas.
-                </p>
-                <p>
-                  Atualmente curso <strong className="text-lime-200 font-semibold">Análise e Desenvolvimento de Sistemas</strong> na
-                  FATEC de Cruzeiro‑SP e atuo como <strong className="text-lime-200 font-semibold">bolsista no INPE</strong> (Instituto Nacional de Pesquisas Espaciais),
-                  integrando o Projeto Educação em parceria com universidades e instituições.
-                </p>
-                <p>
-                  Minha jornada com programação começou há mais de 8 anos, explorando desde <strong className="text-lime-200 font-semibold">Python</strong> e projetos com 
-                  <strong className="text-lime-200 font-semibold"> IoT</strong> (Arduino e ESP32) até o desenvolvimento web moderno. Hoje concentro meu trabalho em 
-                  <strong className="text-lime-200 font-semibold"> HTML, CSS e JavaScript</strong>, aprofundando-me em frameworks 
-                  como <strong className="text-lime-200 font-semibold">React</strong> e <strong className="text-lime-200 font-semibold">Next.js</strong>.
-                </p>
-                <p>
-                  Valorizo <strong className="text-lime-200 font-semibold">códigos limpos</strong>, projetos organizados e foco em
-                  <strong className="text-lime-200 font-semibold"> UX/UI</strong>, unindo lógica, estética e eficiência para criar soluções digitais que realmente fazem sentido.
-                </p>
+            {/* Skills */}
+            <div>
+              <p className="text-xs text-slate-500 uppercase tracking-widest font-semibold mb-3">
+                Tecnologias & áreas
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {skills.map((skill) => (
+                  <SkillTag key={skill}>{skill}</SkillTag>
+                ))}
               </div>
-
-            {/* Skills List */}
-            <div className="flex flex-wrap gap-3">
-              {skills.map((skill) => (
-                <SkillTag key={skill}>{skill}</SkillTag>
-              ))}
             </div>
-            
-            {/* CTA button */}
-            <div className="flex flex-wrap gap-4 pt-4">
-              <a href="#habilidades" className="inline-flex items-center gap-2 px-10 py-3 bg-lime-500 text-slate-900 hover:bg-lime-400 hover:shadow-lime-400/20 font-semibold rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+
+            {/* Separador */}
+            <div className="h-px bg-gradient-to-r from-lime-500/30 via-lime-400/20 to-transparent" />
+
+            {/* CTAs com scroll suave */}
+            <div className="flex flex-wrap gap-3 pt-1">
+              <button
+                onClick={() => scrollToSection("#habilidades")}
+                className="inline-flex items-center gap-2 px-8 py-3
+                  bg-lime-500 text-slate-900 hover:bg-lime-400
+                  font-semibold rounded-full shadow-lg shadow-lime-600/20
+                  hover:shadow-lime-500/30 hover:scale-105
+                  transition-all duration-300"
+              >
                 Ver Habilidades
                 <BoltIcon className="h-4 w-4" />
-              </a>
-              <a href="#projetos" className="inline-flex items-center gap-2 px-10 py-3 bg-slate-900 border hover:bg-lime-500/10 hover:border-lime-400 border-lime-500 text-lime-400 font-semibold rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl">
+              </button>
+              <button
+                onClick={() => scrollToSection("#projetos")}
+                className="inline-flex items-center gap-2 px-8 py-3
+                  bg-transparent border border-lime-500 text-lime-400
+                  hover:bg-lime-500/10 hover:border-lime-400
+                  font-semibold rounded-full shadow-lg
+                  hover:scale-105 transition-all duration-300"
+              >
                 Ver Projetos
                 <PuzzlePieceIcon className="h-4 w-4" />
-              </a>
+              </button>
             </div>
           </div>
         </div>
