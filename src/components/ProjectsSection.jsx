@@ -9,7 +9,7 @@ import "swiper/css/pagination";
 import ProjectCard from "./ProjectCard";
 import projects from "../data/projects";
 
-// ─── IDs dos controles (evita conflito se houver múltiplos Swipers na página) ─
+// ─── IDs dos controles ─
 const PREV_ID = "projects-prev";
 const NEXT_ID = "projects-next";
 const PAGINATION_ID = "projects-pagination";
