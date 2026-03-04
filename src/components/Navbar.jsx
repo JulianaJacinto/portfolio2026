@@ -1,14 +1,19 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Bars3Icon, XMarkIcon, UserIcon, SparklesIcon, FolderIcon, EnvelopeIcon, ArrowDownOnSquareIcon, HomeIcon } from "@heroicons/react/24/solid";
+import { 
+  Bars3Icon, XMarkIcon, UserIcon, SparklesIcon, FolderIcon, 
+  EnvelopeIcon, ArrowDownOnSquareIcon, HomeIcon, MapIcon, BriefcaseIcon 
+} from "@heroicons/react/24/solid";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLinkedin, faGithub, faInstagram, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 
 const NAV_LINKS = [
   { href: "#inicio", label: "Início", icon: HomeIcon },
   { href: "#sobre", label: "Sobre", icon: UserIcon },
+  { href: "#jornada", label: "Jornada", icon: MapIcon },
   { href: "#habilidades", label: "Habilidades", icon: SparklesIcon },
+  { href: "#servicos", label: "Serviços", icon: BriefcaseIcon },
   { href: "#projetos", label: "Projetos", icon: FolderIcon },
   { href: "#contato", label: "Contato", icon: EnvelopeIcon },
 ];
@@ -31,14 +36,14 @@ function NavLink({ href, label, isActive, onClick }) {
   return (
     <button
       onClick={() => onClick(href)}
-      className={`relative px-1 py-2 font-semibold transition-colors duration-300 ${
+      className={`relative px-1 py-2 font-semibold text-sm transition-colors duration-300 ${
         isActive ? "text-lime-400" : "text-slate-200 hover:text-lime-400"
       }`}
     >
       {label}
       {/* Underline animado */}
       <span
-        className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-lime-500 to-lime-400 rounded-full transition-all duration-300 ${
+        className={`absolute bottom-0 left-0 h-0.5 bg-lime-500 rounded-full transition-all duration-300 ${
           isActive ? "w-full opacity-100" : "w-0 opacity-0"
         }`}
       />
@@ -263,7 +268,7 @@ export default function Navbar() {
           {/* Desktop CTA */}
           <div className="hidden lg:block">
             <a
-              href="src/assets/JulianaJacinto_curriculo2026.pdf"
+              href="./assets/JulianaJacinto_curriculo2026.pdf"
               download
               target="_blank"
               rel="noopener noreferrer"

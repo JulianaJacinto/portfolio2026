@@ -61,7 +61,7 @@ function ProfileImage() {
   const [status, setStatus] = useState("loading"); // "loading" | "loaded" | "error"
 
   return (
-    <div className="relative w-64 h-64 md:w-72 md:h-72">
+    <div className="relative w-96 h-96 md:w-[420px] md:h-[420px] ">
       {/* Glow de fundo */}
       <div className="absolute inset-0 rounded-full bg-gradient-to-br from-lime-500/30 to-emerald-500/20 blur-2xl scale-110" />
 
