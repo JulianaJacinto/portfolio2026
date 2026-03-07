@@ -103,27 +103,12 @@ function ContactForm() {
   const handleChange = (e) =>
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
-  const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  const response = await fetch("https://formspree.io/f/mykngbgl", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify(form),
-  });
-
-  if (response.ok) {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     setSent(true);
-    setForm({ name: "", email: "", subject: "", message: "" });
-
     setTimeout(() => setSent(false), 5000);
-  } else {
-    alert("Erro ao enviar mensagem. Tente novamente.");
-  }
-};
+    setForm({ name: "", email: "", subject: "", message: "" });
+  };
 
   if (sent) {
     return (
