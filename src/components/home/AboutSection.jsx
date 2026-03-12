@@ -99,7 +99,7 @@ function ProfileImageCard() {
 
         {/* Imagem real — quando disponível sobe sobre o placeholder */}
         <img
-          src="src/assets/images/placeholder.jpg"
+          src="/julianajacinto.github.io/images/placeholder.jpg"
           alt="Foto de Juliana Jacinto"
           className="relative z-10 w-full h-full object-cover opacity-0 transition-opacity duration-500"
           onLoad={(e) => e.currentTarget.classList.replace("opacity-0", "opacity-100")}

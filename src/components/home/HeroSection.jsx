@@ -84,7 +84,7 @@ function ProfileImage() {
         )}
 
         <img
-          src="src/assets/images/foto de perfil.jpeg"
+          src="/julianajacinto.github.io/images/foto de perfil.jpeg"
           alt="Juliana Jacinto"
           loading="lazy"
           onLoad={() => setStatus("loaded")}
@@ -226,7 +226,7 @@ export default function HeroSection() {
               style={{ animation: "heroFadeUp 0.6s ease-out 0.5s both" }}
             >
               <a
-                href="src/assets/JulianaJacinto_curriculo2026.pdf"
+                href="/julianajacinto.github.io/doc/JulianaJacinto_curriculo.pdf"
                 download
                 target="_blank"
                 rel="noopener noreferrer"

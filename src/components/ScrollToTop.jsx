@@ -22,9 +22,9 @@ export default function ScrollToTop() {
       onClick={handleClick}
       aria-label="Voltar ao topo"
       className={`fixed bottom-8 right-6 z-50
-        w-11 h-11 rounded-full
+        w-14 h-14 rounded-full
         -rotate-45
-        bg-slate-800/90 border border-lime-400/30 text-lime-400
+        bg-slate-800 border border-lime-400/50 text-lime-400
         hover:bg-lime-500 hover:border-lime-500 hover:text-slate-900
         hover:scale-110 hover:-translate-y-1
         shadow-lg shadow-black/30 hover:shadow-lime-500/20
@@ -33,7 +33,7 @@ export default function ScrollToTop() {
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lime-400
         ${visible ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-4 pointer-events-none"}`}
     >
-      <RocketLaunchIcon className="w-5 h-5 mx-auto" />
+      <RocketLaunchIcon className="w-6 h-6 mx-auto" />
     </button>
   );
 }
