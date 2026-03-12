@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as faSolidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
 
-const ICON_VARIANTS = [faSolidHeart, faHeartRegular];
+const ICON_VARIANTS = [faSolidHeart];
 
 const globalStyles = `
   @keyframes floatReaction {
@@ -27,18 +27,20 @@ const globalStyles = `
   display: flex;
   align-items: center;
   color: #1d293d;
-  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.1s;
+  transition: background 0.4s, border-color 0.4s, box-shadow 0.4s, transform 0.4s;
 }
 
 .like-btn:hover {
-  background: #bbf451;
-  border-color: #314158;
-  box-shadow: 0 4px 16px rgba(124, 207, 0, 0.4);
+  background: #1d293d;
+  color: #7ccf00;
+  border-color: #7ccf00;
+  box-shadow: 0 3px 16px rgba(124, 207, 0, 0.4);
+  transform: scale(1.1)
 }
 
 .like-btn:active {
   transform: scale(0.94);
-  background: #6ab800;
+  background: #101b2e;
 }
 
 .like-btn:focus-visible {

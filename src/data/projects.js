@@ -60,7 +60,7 @@ const projects = [
     description: "Site institucional para divulgação do jogo Make Foot. Fui responsável pela organização estrutural das páginas, adaptação do layout e integração de conteúdo informativo.",
     categories: ["Profissional", "Estágio"],
     tools: ["WordPress", "UI Estruturada", "CMS"],
-    image: '/julianajacinto.github.io/images/MakeFoot-image.png',
+    image: '/julianajacinto.github.io/images/Makefoot-image.png',
     featured: false,
     progress: "Concluído",
     links: { github: null, live: "https://makefoot.com.br/" },

@@ -148,14 +148,13 @@ function SkillCard({ name, level, icon, description, animationDelay = 0 }) {
         group-hover:border-lime-400/30 group-hover:bg-lime-500/5 transition-all duration-300">
         <FontAwesomeIcon
           icon={icon}
-          className="w-9 h-9 text-lime-400 group-hover:scale-110 transition-transform duration-300"
+          className="w-9 h-9 text-lime-400"
           aria-hidden="true"
         />
       </div>
 
       {/* Nome */}
-      <h3 className="text-lg font-bold text-slate-100 mb-4
-        group-hover:text-lime-300 transition-colors duration-300">
+      <h3 className="text-lg font-bold text-slate-100 mb-4">
         {name}
       </h3>
 

@@ -122,12 +122,6 @@ function TechGridBackground() {
         <rect width="100%" height="100%" fill="url(#srv-dots)" />
       </svg>
 
-      {/* Glows */}
-      <div className="absolute -top-24 left-1/2 -translate-x-1/2
-        w-[600px] h-[300px] bg-lime-500/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-0
-        w-80 h-80 bg-lime-400/4 rounded-full blur-3xl" />
-
       {/* Linha separadora topo */}
       <div className="absolute top-0 inset-x-0 h-1
         bg-gradient-to-r from-transparent via-lime-500/30 to-transparent" />
@@ -216,12 +210,10 @@ function ServiceCard({ icon, title, description, features, index }) {
       </div>
 
       {/* Título + descrição */}
-      <h3 className="text-base font-bold text-slate-100 mb-2
-        group-hover:text-lime-300 transition-colors duration-300">
+      <h3 className="text-base font-bold text-slate-100 mb-2">
         {title}
       </h3>
-      <p className="text-sm text-slate-400 leading-relaxed mb-5
-        group-hover:text-slate-300 transition-colors duration-300">
+      <p className="text-sm text-slate-400 leading-relaxed mb-5">
         {description}
       </p>
 
@@ -296,41 +288,6 @@ export default function ServicesSection() {
           {rest.map((service, i) => (
             <ServiceCard key={service.title} {...service} index={i} />
           ))}
-        </div>
-
-        {/* CTA rodapé */}
-        <div
-          className="mt-14 flex flex-col sm:flex-row items-center justify-between
-            gap-6 p-6 rounded-2xl border border-slate-700/50
-            bg-slate-900/40 backdrop-blur-sm"
-        >
-          <div>
-            <p className="text-slate-200 font-semibold mb-1">
-              Não encontrou o que procura?
-            </p>
-            <p className="text-slate-500 text-sm">
-              Me conte seu projeto e encontramos juntos a melhor solução.
-            </p>
-          </div>
-          <a
-            href="#contato"
-            onClick={(e) => {
-              e.preventDefault();
-              const el = document.getElementById("contato");
-              if (!el) return;
-              window.scrollTo({
-                top: el.getBoundingClientRect().top + window.scrollY - 80,
-                behavior: "smooth",
-              });
-            }}
-            className="flex-shrink-0 inline-flex items-center gap-2 px-8 py-3
-              bg-lime-500 hover:bg-lime-400 text-slate-900
-              font-semibold rounded-full shadow-lg shadow-lime-600/20
-              hover:shadow-lime-500/30 hover:scale-105
-              transition-all duration-300 whitespace-nowrap"
-          >
-            Falar sobre seu projeto
-          </a>
         </div>
       </div>
     </section>

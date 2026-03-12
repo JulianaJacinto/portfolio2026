@@ -160,8 +160,7 @@ function JourneyCard({ year, icon, title, subtitle, description, tags, index }) 
 
       {/* Título + subtítulo */}
       <div className="mb-3">
-        <h3 className="text-base font-bold text-slate-100 leading-snug
-          group-hover:text-lime-300 transition-colors duration-300 mb-1">
+        <h3 className="text-base font-bold text-slate-100 leading-snug mb-1">
           {title}
         </h3>
         <p className="text-xs text-lime-400/60 font-semibold uppercase tracking-wider">
@@ -170,8 +169,7 @@ function JourneyCard({ year, icon, title, subtitle, description, tags, index }) 
       </div>
 
       {/* Descrição */}
-      <p className="text-sm text-slate-400 leading-relaxed flex-1
-        group-hover:text-slate-300 transition-colors duration-300 mb-5">
+      <p className="text-sm text-slate-400 leading-relaxed flex-1 mb-5">
         {description}
       </p>
 

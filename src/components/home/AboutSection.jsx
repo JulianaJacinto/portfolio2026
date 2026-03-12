@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { BoltIcon, PuzzlePieceIcon } from "@heroicons/react/24/solid";
+import { BoltIcon, PuzzlePieceIcon, PhoneIcon, CodeBracketIcon  } from "@heroicons/react/24/solid";
 
 // ─── Scroll suave com offset ────────────────────────
 const HEADER_OFFSET = 80;
@@ -79,16 +79,9 @@ function DecorativeBackground() {
 function ProfileImageCard() {
   return (
     <div className="relative group h-full min-h-[360px]">
-      {/* Borda animada no hover */}
-      <div className="absolute -inset-px rounded-2xl bg-gradient-to-br from-lime-400/0 via-lime-400/0 to-lime-400/0
-        group-hover:from-lime-500/30 group-hover:via-lime-400/10 group-hover:to-emerald-500/20
-        transition-all duration-500 blur-sm" aria-hidden="true" />
-
       {/* Card */}
       <div className="relative h-full rounded-2xl overflow-hidden
-        border border-lime-400/15 group-hover:border-lime-400/40
-        bg-slate-900/60 backdrop-blur-sm
-        transition-all duration-300 shadow-xl shadow-black/30">
+        border border-lime-400/15 shadow-xl shadow-black/30">
 
         {/* Placeholder elegante enquanto a imagem não está disponível */}
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-gradient-to-br from-slate-800 to-slate-900">
@@ -104,10 +97,6 @@ function ProfileImageCard() {
           className="relative z-10 w-full h-full object-cover opacity-0 transition-opacity duration-500"
           onLoad={(e) => e.currentTarget.classList.replace("opacity-0", "opacity-100")}
         />
-
-        {/* Shine no hover */}
-        <div className="absolute inset-0 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-500
-          bg-gradient-to-tr from-transparent via-white/3 to-transparent pointer-events-none" />
       </div>
 
       {/* Badge flutuante */}
@@ -239,6 +228,28 @@ export default function AboutSection() {
               >
                 Ver Projetos
                 <PuzzlePieceIcon className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => scrollToSection("#projetos")}
+                className="inline-flex items-center gap-2 px-8 py-3
+                  bg-transparent border border-lime-500 text-lime-400
+                  hover:bg-lime-500/10 hover:border-lime-400
+                  font-semibold rounded-full shadow-lg
+                  hover:scale-105 transition-all duration-300"
+              >
+                O que posso oferecer?
+                <CodeBracketIcon  className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => scrollToSection("#projetos")}
+                className="inline-flex items-center gap-2 px-8 py-3
+                  bg-lime-500 text-slate-900 hover:bg-lime-400
+                  font-semibold rounded-full shadow-lg shadow-lime-600/20
+                  hover:shadow-lime-500/30 hover:scale-105
+                  transition-all duration-300"
+              >
+                Entre em contato
+                <PhoneIcon className="h-4 w-4" />
               </button>
             </div>
           </div>

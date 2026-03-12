@@ -1,12 +1,3 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLinkedin, faGithub, faInstagram, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
-
-const SOCIALS = [
-  { icon: faLinkedin,  href: "https://www.linkedin.com/in/juliana-jacinto/", label: "LinkedIn" },
-  { icon: faGithub,    href: "https://github.com/julianajacinto",            label: "GitHub" },
-  { icon: faWhatsapp,  href: "https://wa.me/5511966403523",                  label: "WhatsApp" },
-  { icon: faInstagram, href: "https://www.instagram.com/jukka.arts/",        label: "Instagram" },
-];
 
 export default function FooterSection() {
   return (
@@ -30,25 +21,6 @@ export default function FooterSection() {
             &copy; {new Date().getFullYear()} Todos os direitos reservados | <br className="sm:hidden" />
             Desenvolvido por <a href="https://www.linkedin.com/in/juliana-jacinto/" target="_blank" rel="noopener noreferrer" className="text-lime-400 hover:underline">Juliana Jacinto</a>
           </p>
-
-          {/* Redes sociais */}
-          <div className="flex items-center gap-2">
-            {SOCIALS.map(({ icon, href, label }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={label}
-                className="w-9 h-9 rounded-lg bg-slate-800/60 border border-slate-700/40
-                  flex items-center justify-center text-slate-500
-                  hover:bg-slate-800 hover:border-lime-400/40 hover:text-lime-400
-                  transition-all duration-200"
-              >
-                <FontAwesomeIcon icon={icon} className="w-4 h-4" />
-              </a>
-            ))}
-          </div>
         </div>
       </div>
     </footer>
