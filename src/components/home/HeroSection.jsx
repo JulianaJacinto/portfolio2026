@@ -84,7 +84,7 @@ function ProfileImage() {
         )}
 
         <img
-          src="/julianajacinto.github.io/images/foto de perfil.jpeg"
+          src="/images/foto de perfil.jpeg"
           alt="Juliana Jacinto"
           loading="lazy"
           onLoad={() => setStatus("loaded")}
