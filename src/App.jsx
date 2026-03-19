@@ -1,18 +1,27 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 import ScrollToTop from "./components/ScrollToTop";
 import HeartButton from "./components/HeartButton";
 import Navbar from "./components/Navbar";
-import HomePage from "./pages/HomePage";
 import FooterSection from "./components/FooterSection";
+
+import HomePage from "./pages/HomePage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 export default function App() {
   return (
-    <>
-      <Navbar />
-      <HomePage />
-      <FooterSection />
+    <Router>
+      <ScrollToTop />
 
-      <ScrollToTop /> 
+      <Navbar />
+
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+
+      <FooterSection />
       <HeartButton />
-    </>
+    </Router>
   );
 }

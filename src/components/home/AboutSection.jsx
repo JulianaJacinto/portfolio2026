@@ -230,7 +230,7 @@ export default function AboutSection() {
                 <PuzzlePieceIcon className="h-4 w-4" />
               </button>
               <button
-                onClick={() => scrollToSection("#projetos")}
+                onClick={() => scrollToSection("#servicos")}
                 className="inline-flex items-center gap-2 px-8 py-3
                   bg-transparent border border-lime-500 text-lime-400
                   hover:bg-lime-500/10 hover:border-lime-400
@@ -241,7 +241,7 @@ export default function AboutSection() {
                 <CodeBracketIcon  className="h-4 w-4" />
               </button>
               <button
-                onClick={() => scrollToSection("#projetos")}
+                onClick={() => scrollToSection("#contato")}
                 className="inline-flex items-center gap-2 px-8 py-3
                   bg-lime-500 text-slate-900 hover:bg-lime-400
                   font-semibold rounded-full shadow-lg shadow-lime-600/20
